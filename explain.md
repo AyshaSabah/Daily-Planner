@@ -91,14 +91,14 @@ The `return (...)` block describes what the UI looks like. It uses **JSX**, whic
 
 ## 3. The Styling (`src/App.css`)
 
-We used a **Neo-Brutalist / Cyber-Grid** style. Here are the key techniques:
+We used a **Clean Light / Neo-Brutalist** style. Here are the key techniques:
 
 ### CSS Variables
 We define colors once at the top so we can change the theme easily.
 ```css
 :root {
-  --bg-dark: #000000;
-  --primary: #ccff00; /* Acid Lime */
+  --bg-main: #f8f9fa;
+  --primary: #007bff; /* Vibrant Blue */
   /* ... */
 }
 ```
@@ -107,7 +107,7 @@ We define colors once at the top so we can change the theme easily.
 We created the technical grid background using CSS gradients.
 ```css
 background-image: 
-  linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+  linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
   linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 background-size: 50px 50px; /* Creates 50px squares */
 ```

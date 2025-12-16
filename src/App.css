@@ -1,14 +1,14 @@
 :root {
-  --bg-dark: #000000;
-  --bg-gradient: linear-gradient(135deg, #000000, #111111, #0a0a0a);
-  --glass-bg: rgba(20, 20, 20, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-  --primary: #ccff00; /* Acid Lime */
-  --secondary: #00ff9d; /* Neon Mint */
+  --bg-main: #f8f9fa;
+  --bg-gradient: linear-gradient(135deg, #f8f9fa, #e9ecef, #f8f9fa);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  --primary: #007bff; /* Vibrant Blue */
+  --secondary: #00d4ff; /* Cyan */
   --accent: #ff0055; /* Hot Pink */
-  --text-main: #ffffff;
-  --text-muted: #888888;
+  --text-main: #212529;
+  --text-muted: #6c757d;
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
 }
@@ -16,10 +16,10 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-main);
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
   color: var(--text-main);
   font-family: var(--font-body);
@@ -66,7 +66,7 @@ body {
   font-size: 1rem;
   color: var(--primary);
   font-weight: 700;
-  background: rgba(204, 255, 0, 0.1);
+  background: rgba(0, 123, 255, 0.1);
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   border: 1px solid var(--primary);
@@ -99,7 +99,7 @@ body {
 
 /* Sidebar & Form */
 .card {
-  background: rgba(20, 20, 20, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 0;
@@ -166,10 +166,10 @@ body {
 .add-task-form input[type="time"] {
   padding: 16px;
   background: transparent;
-  border: 1px solid #333;
+  border: 1px solid #ced4da;
   border-radius: 0;
   font-size: 1.1rem;
-  color: white;
+  color: var(--text-main);
   font-family: var(--font-body);
   transition: all 0.2s ease;
 }
@@ -178,14 +178,14 @@ body {
   border-color: var(--primary);
   box-shadow: none;
   outline: none;
-  background: rgba(204, 255, 0, 0.05);
+  background: rgba(0, 123, 255, 0.05);
 }
 
 .add-task-form button {
   margin-top: 1.5rem;
   padding: 20px;
   background: var(--primary);
-  color: black;
+  color: white;
   border: none;
   border-radius: 0;
   font-weight: 900;
@@ -194,20 +194,20 @@ body {
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 2px;
-  box-shadow: 5px 5px 0px rgba(255, 255, 255, 0.1);
+  box-shadow: 5px 5px 0px rgba(0, 123, 255, 0.2);
   position: relative;
   overflow: hidden;
 }
 
 .add-task-form button:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px rgba(255, 255, 255, 0.2);
-  background: #d4ff33;
+  box-shadow: 7px 7px 0px rgba(0, 123, 255, 0.3);
+  background: #0069d9;
 }
 
 .add-task-form button:active {
   transform: translate(2px, 2px);
-  box-shadow: 0px 0px 0px rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 0px 0px rgba(0, 123, 255, 0.1);
 }
 
 /* Tasks Section */
@@ -216,7 +216,7 @@ body {
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 2rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #dee2e6;
   padding-bottom: 1rem;
 }
 
@@ -253,13 +253,13 @@ body {
   color: var(--text-muted);
   background: repeating-linear-gradient(
     45deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.03) 10px,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 10px,
     transparent 10px,
     transparent 20px
   );
   border-radius: 0;
-  border: 1px solid #333;
+  border: 1px solid #dee2e6;
   font-size: 1.5rem;
   font-family: var(--font-heading);
   text-transform: uppercase;
@@ -269,10 +269,10 @@ body {
   display: flex;
   align-items: center;
   padding: 2rem;
-  background: rgba(20, 20, 20, 0.6);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 0;
-  border: 1px solid #333;
-  border-left: 1px solid #333;
+  border: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
   transition: all 0.2s ease;
   color: var(--text-main);
   position: relative;
@@ -285,13 +285,13 @@ body {
 
 .task-card:hover {
   transform: translateX(10px);
-  background: rgba(30, 30, 30, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: none;
   border-color: var(--text-muted);
 }
 
 .task-card.active {
-  background: rgba(204, 255, 0, 0.05);
+  background: rgba(0, 123, 255, 0.05);
   border: 1px solid var(--primary);
   box-shadow: none;
 }
@@ -301,10 +301,10 @@ body {
 }
 
 .task-card.completed {
-  opacity: 0.3;
+  opacity: 0.5;
   background: transparent;
   text-decoration: line-through;
-  border-color: #333;
+  border-color: #dee2e6;
   filter: grayscale(1);
 }
 
@@ -346,8 +346,8 @@ body {
 
 .delete-btn {
   background: transparent;
-  border: 1px solid #333;
-  color: #666;
+  border: 1px solid #dee2e6;
+  color: var(--text-muted);
   font-size: 1.2rem;
   cursor: pointer;
   padding: 12px;
@@ -363,7 +363,7 @@ body {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
   transform: none;
 }
 
@@ -373,11 +373,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-dark);
+  background: #f8f9fa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--glass-border);
+  background: #ccc;
   border-radius: 5px;
 }
 
@@ -410,9 +410,9 @@ body {
   left: -10%;
   width: 500px;
   height: 500px;
-  background: var(--primary);
+  background: var(--secondary);
   animation-delay: 0s;
-  opacity: 0.2;
+  opacity: 0.15;
 }
 
 .blob-2 {
@@ -420,9 +420,9 @@ body {
   right: -10%;
   width: 600px;
   height: 600px;
-  background: var(--secondary);
+  background: var(--primary);
   animation-delay: -5s;
-  opacity: 0.2;
+  opacity: 0.15;
 }
 
 .blob-3 {
@@ -432,7 +432,7 @@ body {
   height: 400px;
   background: var(--accent);
   animation-delay: -10s;
-  opacity: 0.15;
+  opacity: 0.1;
 }
 
 @keyframes float {
