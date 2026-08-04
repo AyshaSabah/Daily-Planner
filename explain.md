@@ -1,147 +1,267 @@
 # Daily Planner - Code Explanation
 
-This document explains how the Daily Planner application works, breaking down the project structure, the code logic, and the styling.
+This document explains how the Daily Planner app works today: what each file does, how the React logic behaves, how the UI is styled, and what the optional Python backend is for.
 
 ## 1. Project Structure
 
-Here's what the key files and folders do:
+The main pieces are:
 
-- **`index.html`**: The main HTML file that the browser loads first. It links to the JavaScript entry point.
-- **`src/`**: Contains all the frontend source code.
-  - **`main.jsx`**: The "entry point" for React. It finds the `div` with `id="root"` in `index.html` and puts our React app inside it.
-  - **`App.jsx`**: The main component where all the application logic lives.
-  - **`App.css`**: The stylesheet that defines the "Cyber-Grid" look.
-- **`backend/`**: (Optional) Contains the Python backend code.
-  - **`main.py`**: A simple API server using FastAPI.
-- **`package.json`**: Lists the project dependencies (like React) and scripts (like `npm run dev`).
-- **`vite.config.js`**: Configuration for Vite, the tool that builds and runs our project.
+- `index.html`: The Vite entry page. It loads the app and includes the Google Fonts used by the design.
+- `src/main.jsx`: The React bootstrap file. It mounts the app into the `#root` element.
+- `src/App.jsx`: The main app component. It holds the planner state, task logic, and page layout.
+- `src/App.css`: The app-specific styling, including the desktop layout and mobile responsive rules.
+- `src/index.css`: Global resets and base page sizing.
+- `backend/main.py`: An optional FastAPI backend with sample task routes.
+- `package.json`: Project scripts and dependencies.
 
----
+## 2. Frontend Overview
 
-## 2. The Frontend Logic (`src/App.jsx`)
+The frontend is a single React component that behaves like a small task planner.
 
-This file uses **React**, a library for building user interfaces.
+It does four main things:
 
-### State Management (`useState`)
-We use `useState` to keep track of data that changes over time.
+- loads saved tasks from Local Storage
+- lets you add new tasks with a time and description
+- lets you mark tasks complete or delete them
+- highlights the task that matches the current time window
+
+## 3. `src/App.jsx`
+
+### Imports
+
+The app imports `useState` and `useEffect` from React, plus the CSS file.
+
+```jsx
+import { useState, useEffect } from 'react'
+import './App.css'
+```
+
+### Task State
+
+`tasks` stores the full list of planner items. The initial value comes from Local Storage if it exists; otherwise the app starts with a default schedule.
 
 ```jsx
 const [tasks, setTasks] = useState(() => {
-  // This function runs only once when the app starts.
-  // It tries to load saved tasks from the browser's Local Storage.
   const saved = localStorage.getItem('daily-planner-tasks')
   if (saved) {
     return JSON.parse(saved)
   }
-  // If no saved tasks, it returns a default list.
-  return [...]
+  return [ ... ]
 })
 ```
 
-- **`tasks`**: An array of objects, where each object represents a task (id, title, time, completed).
-- **`setTasks`**: A function we call whenever we want to update the list of tasks.
+Each task has this shape:
 
-### Side Effects (`useEffect`)
-`useEffect` lets us run code in response to changes.
+- `id`: a unique number
+- `title`: the task text
+- `time`: a `HH:MM` string
+- `completed`: a boolean flag
 
-**1. Saving to Local Storage:**
+### Form State
+
+`newTask` stores the temporary values from the add-task form.
+
+```jsx
+const [newTask, setNewTask] = useState({ title: '', time: '' })
+```
+
+### Clock State
+
+`currentTime` stores the live time shown in the navbar.
+
+```jsx
+const [currentTime, setCurrentTime] = useState(new Date())
+```
+
+### Saving Tasks
+
+Whenever `tasks` changes, the app writes the new list back to Local Storage so the schedule survives refreshes.
+
 ```jsx
 useEffect(() => {
-  // Whenever 'tasks' changes, save the new list to the browser.
   localStorage.setItem('daily-planner-tasks', JSON.stringify(tasks))
 }, [tasks])
 ```
 
-**2. Updating the Clock:**
+### Updating the Clock
+
+The clock updates every minute.
+
 ```jsx
 useEffect(() => {
-  // Set up a timer to update 'currentTime' every minute (60000ms).
   const timer = setInterval(() => setCurrentTime(new Date()), 60000)
-  
-  // Cleanup function: stops the timer if the component is removed.
   return () => clearInterval(timer)
 }, [])
 ```
 
 ### Adding a Task
+
+`addTask` handles form submission.
+
+What it does:
+
+- stops the page from reloading
+- checks that both fields are filled in
+- creates a new `id`
+- builds a new task object
+- sorts the list by time
+- saves the updated list
+- clears the form
+
 ```jsx
 const addTask = (e) => {
-  e.preventDefault() // Prevents the page from reloading when the form submits.
-  
-  // Create a new ID (highest existing ID + 1).
+  e.preventDefault()
+  if (!newTask.title || !newTask.time) return
+
   const id = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1
-  
   const task = { ...newTask, id, completed: false }
-  
-  // Add the new task to the list and sort them by time.
   const updatedTasks = [...tasks, task].sort((a, b) => a.time.localeCompare(b.time))
-  
+
   setTasks(updatedTasks)
-  setNewTask({ title: '', time: '' }) // Clear the form.
+  setNewTask({ title: '', time: '' })
 }
 ```
 
-### Rendering (The HTML part)
-The `return (...)` block describes what the UI looks like. It uses **JSX**, which looks like HTML but lets us use JavaScript variables inside `{ curly braces }`.
+### Deleting a Task
 
-- **`{tasks.map(task => ...)}`**: Loops through the `tasks` array and creates a `div` for each one.
-- **`className={...}`**: We use dynamic strings to add classes like `active` or `completed` based on the task's state.
+`deleteTask` removes one task by filtering it out of the array.
 
----
-
-## 3. The Styling (`src/App.css`)
-
-We used a **Clean Light / Neo-Brutalist** style. Here are the key techniques:
-
-### CSS Variables
-We define colors once at the top so we can change the theme easily.
-```css
-:root {
-  --bg-main: #f8f9fa;
-  --primary: #007bff; /* Vibrant Blue */
-  /* ... */
+```jsx
+const deleteTask = (id) => {
+  setTasks(tasks.filter(t => t.id !== id))
 }
 ```
 
-### The Grid Background
-We created the technical grid background using CSS gradients.
-```css
-background-image: 
-  linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-background-size: 50px 50px; /* Creates 50px squares */
-```
+### Current Task Highlighting
 
-### Layout (CSS Grid)
-We use CSS Grid to create the two-column layout.
-```css
-.main-content {
-  display: grid;
-  grid-template-columns: 400px 1fr; /* Sidebar is 400px, Content takes the rest */
-  gap: 4rem;
+`getCurrentTask` compares the current clock time against each task time.
+
+It converts both values into minutes, then marks a task as current if the current time is within the hour starting at that task time.
+
+That means a task scheduled for 09:00 is highlighted from 09:00 through 09:59.
+
+```jsx
+const getCurrentTask = () => {
+  const now = currentTime.getHours() * 60 + currentTime.getMinutes()
+
+  let currentTaskId = null
+
+  tasks.forEach(task => {
+    const [hours, minutes] = task.time.split(':').map(Number)
+    const taskTime = hours * 60 + minutes
+    const diff = now - taskTime
+
+    if (diff >= 0 && diff < 60) {
+      currentTaskId = task.id
+    }
+  })
+
+  return currentTaskId
 }
 ```
 
-### "Tech" Corners
-We used pseudo-elements (`::before` and `::after`) to create the little L-shaped corners on the "Add Task" card.
-```css
-.card::before {
-  content: '';
-  position: absolute;
-  top: -1px; left: -1px;
-  width: 20px; height: 20px;
-  border-top: 2px solid var(--primary);
-  border-left: 2px solid var(--primary);
-}
+### Rendering the UI
+
+The `return` block defines the page structure:
+
+- a background with decorative blobs
+- a navbar with the title and current date/time
+- a sidebar card with the add-task form
+- the schedule section with all tasks listed below
+
+Each task card uses conditional classes:
+
+- `active` when the task is in the current time window
+- `completed` when the checkbox is checked
+
+```jsx
+className={`task-card ${task.id === currentTaskId ? 'active' : ''} ${task.completed ? 'completed' : ''}`}
 ```
 
----
+The checkbox toggles the `completed` flag, and the delete button removes the task.
 
-## 4. The Backend (Optional)
+## 4. Styling in `src/App.css`
 
-The `backend/main.py` file uses **FastAPI**, a Python framework.
+The visual style is clean, sharp, and slightly neo-brutalist.
 
-- **`@app.get("/tasks")`**: Defines a "route". When you visit `/tasks`, it runs the function `get_tasks()` and returns the data as JSON.
-- **`class Task(BaseModel)`**: Defines the "shape" of data we expect (id, title, time). This ensures data quality.
+### Design Tokens
 
-*Note: Currently, the React frontend is "standalone" and uses Local Storage. It doesn't talk to this Python backend yet, but the structure is there if you want to connect them later!*
+The top of the file defines CSS variables for the main colors and fonts.
+
+These variables make the design easy to adjust without rewriting every rule.
+
+### Page Background
+
+The page uses a light grid background and floating blurred blobs for visual texture.
+
+- the grid comes from layered CSS gradients
+- the blobs are fixed-position circles with blur and animation
+
+### Layout
+
+The main desktop layout is a two-column CSS Grid:
+
+- left side: the form card
+- right side: the schedule
+
+On smaller screens, the layout collapses into a single column.
+
+### Cards and Buttons
+
+The cards use borders, sharp corners, and accent corner marks created with pseudo-elements.
+
+The button and task controls keep the same strong visual language with clear hover and active states.
+
+### Mobile Responsiveness
+
+The file includes breakpoint rules for tablet and phone widths.
+
+On mobile, the app:
+
+- reduces outer spacing
+- stacks the navbar into a vertical layout
+- shrinks headings and labels
+- makes task rows more compact
+- keeps the time, title, and actions aligned in a tighter grid
+
+## 5. Global Styles in `src/index.css`
+
+This file provides the base page reset.
+
+Important parts:
+
+- `body` removes the default margin and sets a minimum width/height
+- `#root` is set to full width so React can fill the page
+- default browser typography and button styles are normalized
+
+## 6. Optional Backend in `backend/main.py`
+
+The backend is a small FastAPI example.
+
+It defines a `Task` model with Pydantic:
+
+- `id`: integer
+- `title`: task name
+- `time`: string in `HH:MM` format
+- `completed`: optional boolean, defaulting to `False`
+
+It also includes simple routes:
+
+- `GET /` returns a basic status message
+- `GET /tasks` returns the mock task list
+- `POST /tasks` appends a task to the in-memory list
+
+Right now the React app does not call this backend. The frontend works on its own with Local Storage, so the backend is more of a starter structure if you want to connect the app to an API later.
+
+## 7. Data Flow Summary
+
+The app flow is simple:
+
+1. React loads.
+2. Saved tasks are read from Local Storage or default tasks are used.
+3. The clock updates every minute.
+4. Adding, completing, or deleting a task updates state.
+5. State changes are written back to Local Storage.
+6. The UI rerenders automatically with the new schedule.
+
+That is the full behavior of the current Daily Planner app.
