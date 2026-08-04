@@ -2,14 +2,11 @@
 
 This document explains how the Daily Planner app works today: what each file does, how the React logic behaves, how the UI is styled, and what the optional Python backend is for.
 
-## Programming Language and Framework
+## Programming Language and Frameworks
 
-The main app is written in **JavaScript** using **React** as the frontend framework.
+The main frontend is written in **JavaScript** using **React** with **Vite** as the build tool. The React files use **JSX**, which lets you write UI markup inside JavaScript.
 
-- **Programming language:** JavaScript
-- **Frontend framework/library:** React
-- **Build tool:** Vite
-- **Optional backend language/framework:** Python with FastAPI
+The optional backend is written in **Python** using **FastAPI**.
 
 ## 1. Project Structure
 
